@@ -1,153 +1,63 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(GymApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class GymApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Midterm Exam',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-      debugShowCheckedModeBanner: false,
+      title: 'Gym Classes',
+      home: GymClassList(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  final List<Widget> _pages = [
-    HomePage(),
-    SecondPage(), // Profile page with image
+class GymClassList extends StatelessWidget {
+  final List<Map<String, String>> classes = [
+    {'class': 'Yoga', 'schedule': 'Monday – 8:00 AM'},
+    {'class': 'Zumba', 'schedule': 'Wednesday – 6:00 PM'},
+    {'class': 'Pilates', 'schedule': 'Friday – 7:00 AM'},
+    {'class': 'Spin Class', 'schedule': 'Saturday – 9:00 AM'},
   ];
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Krisshiel Mae Lanoy Renoblas'),
-        backgroundColor: Colors.blue,
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {},
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
+        title: Text('Weekly Fitness Classes'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _pages[_selectedIndex],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person), // Profile icon
-            label: 'Profile',
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: classes.length,
+        itemBuilder: (context, index) {
+          final className = classes[index]['class']!;
+          final schedule = classes[index]['schedule']!;
+
+          return ListTile(
+            leading: Icon(Icons.fitness_center),
+            title: Text(className),
+            subtitle: Text(schedule),
+            trailing: ElevatedButton(
+              child: Text('Book'),
+              onPressed: () {
+                _showSnackBar(context, 'You booked $className class!');
+              },
+            ),
+            onTap: () {
+              _showSnackBar(context, 'You selected $className – ${schedule.replaceAll('–', 'at')}');
+            },
+          );
+        },
       ),
     );
   }
 }
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                height: 100,
-                color: Colors.red,
-                child: Center(child: Text('Container 1')),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                height: 100,
-                color: Colors.blue,
-                child: Center(child: Text('Container 2')),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 16),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(16),
-            color: Colors.green,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'This is a styled Text widget with padding/margin.',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 16),
-                Image.network(
-                  'https://i.pinimg.com/1200x/44/8e/7a/448e7ad06d1606eaaa875613c72419ac.jpg',
-                  width: 150,
-                  height: 150,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class SecondPage extends StatelessWidget {
-  const SecondPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Image.network(
-        'https://i.pinimg.com/1200x/44/8e/7a/448e7ad06d1606eaaa875613c72419ac.jpg',
-        width: 200,
-        height: 200,
-      ),
-    );
-  }
-}
+		
+	
